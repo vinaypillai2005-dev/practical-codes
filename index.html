@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>College Practical Codes</title>
+<style>
+  :root { color-scheme: dark; --bg:#0b1020; --panel:#141c31; --line:#2b3857; --text:#eef3ff; --muted:#9eacc9; --accent:#79a8ff; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:linear-gradient(135deg,#0b1020,#101a30); color:var(--text); font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif; }
+  header { padding:30px 18px 22px; text-align:center; border-bottom:1px solid var(--line); }
+  h1 { margin:0 0 6px; font-size:clamp(25px,5vw,38px); }
+  header p { margin:0; color:var(--muted); }
+  main { max-width:900px; margin:24px auto; padding:0 14px 45px; }
+  .toolbar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+  input[type=search] { flex:1; min-width:190px; padding:12px 14px; border:1px solid var(--line); border-radius:12px; background:var(--panel); color:var(--text); font:inherit; }
+  .count { color:var(--muted); align-self:center; font-size:14px; }
+  .card { background:rgba(20,28,49,.96); border:1px solid var(--line); border-radius:14px; margin:12px 0; overflow:hidden; }
+  .card-head { padding:14px 16px; display:flex; justify-content:space-between; gap:12px; align-items:center; cursor:pointer; }
+  .card-head h2 { margin:0; font-size:17px; font-weight:650; }
+  .tag { color:#b9d0ff; background:#22365c; padding:3px 9px; border-radius:99px; font-size:12px; white-space:nowrap; }
+  pre { margin:0; padding:16px; overflow:auto; border-top:1px solid var(--line); background:#080d18; color:#e1eaff; font:13px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace; white-space:pre; }
+  .placeholder { padding:18px; color:var(--muted); border-top:1px solid var(--line); }
+  footer { text-align:center; color:var(--muted); font-size:13px; padding:0 15px 30px; }
+  .hint { padding:14px 16px; border:1px dashed #42547a; border-radius:12px; color:var(--muted); margin-bottom:18px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>📘 College Practical Codes</h1>
+  <p>All practical programs in one place</p>
+</header>
+<main>
+  <div class="hint">Codes will be added here later. Open a practical to view its program; use your computer's normal select-and-copy shortcuts.</div>
+  <div class="toolbar">
+    <input id="search" type="search" placeholder="Search practical name or code…" aria-label="Search practicals">
+    <span class="count" id="count">15 practical slots</span>
+  </div>
+  <section id="list" aria-live="polite"></section>
+</main>
+<footer>Personal study page · Keep this link private if the codes are for your class only.</footer>
+<script>
+/* Later, replace each placeholder's title and code below with your friend's codes. */
+const practicals = [
+  { title: "Practical 01 — Add title later", code: "" },
+  { title: "Practical 02 — Add title later", code: "" },
+  { title: "Practical 03 — Add title later", code: "" },
+  { title: "Practical 04 — Add title later", code: "" },
+  { title: "Practical 05 — Add title later", code: "" },
+  { title: "Practical 06 — Add title later", code: "" },
+  { title: "Practical 07 — Add title later", code: "" },
+  { title: "Practical 08 — Add title later", code: "" },
+  { title: "Practical 09 — Add title later", code: "" },
+  { title: "Practical 10 — Add title later", code: "" },
+  { title: "Practical 11 — Add title later", code: "" },
+  { title: "Practical 12 — Add title later", code: "" },
+  { title: "Practical 13 — Add title later", code: "" },
+  { title: "Practical 14 — Add title later", code: "" },
+  { title: "Practical 15 — Add title later", code: "" }
+];
+const list = document.getElementById('list');
+const search = document.getElementById('search');
+const count = document.getElementById('count');
+function render() {
+  const q = search.value.trim().toLowerCase();
+  const shown = practicals.map((p,i)=>({...p, n:i+1})).filter(p => (p.title+' '+p.code).toLowerCase().includes(q));
+  count.textContent = `${shown.length} practical${shown.length===1?'':'s'}`;
+  list.innerHTML = shown.map(p => `
+    <article class="card">
+      <div class="card-head" role="button" tabindex="0" aria-expanded="false">
+        <h2>${escapeHtml(p.title)}</h2><span class="tag">Practical ${String(p.n).padStart(2,'0')} ▾</span>
+      </div>
+      <div class="placeholder">${p.code ? `<pre>${escapeHtml(p.code)}</pre>` : 'Code not added yet — we can fill this in when your friend sends it.'}</div>
+    </article>`).join('');
+  list.querySelectorAll('.card-head').forEach(head => {
+    const toggle = () => {
+      const body = head.nextElementSibling;
+      const open = body.hidden;
+      body.hidden = !open;
+      head.setAttribute('aria-expanded', String(open));
+      head.querySelector('.tag').textContent = `Practical ${String(shown[Array.from(list.querySelectorAll('.card-head')).indexOf(head)].n).padStart(2,'0')} ${open?'▴':'▾'}`;
+    };
+    head.nextElementSibling.hidden = true;
+    head.addEventListener('click', toggle);
+    head.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();} });
+  });
+}
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+search.addEventListener('input', render);
+render();
+</script>
+</body>
+</html>
